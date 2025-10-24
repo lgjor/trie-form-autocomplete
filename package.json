@@ -1,0 +1,25 @@
+{
+  "name": "trie-form-autocomplete",
+  "version": "1.0.0",
+  "description": "Sistema de autocomplete para formulários HTML usando estrutura de dados Trie",
+  "type": "module",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "npx http-server . -p 8080 -o",
+    "test": "echo \"Testes serão implementados futuramente\" && exit 0"
+  },
+  "keywords": [
+    "autocomplete",
+    "trie",
+    "data-structures",
+    "javascript",
+    "vanilla-js",
+    "form",
+    "input"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}
+

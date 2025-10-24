@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo SearchService - Trie Autocomplete</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 { color: #333; }
+        .example-section {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        .example-section h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .output {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .search-result {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+            color: #2e7d32;
+        }
+        .stats-result {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1565c0;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .control-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .fuzzy-result {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Exemplo SearchService</h1>
+    <p>Demonstração do SearchService com cache, filtros, ordenação e busca fuzzy.</p>
+
+    <div class="example-section">
+        <h3>1. Inicializar SearchService</h3>
+        <button onclick="initializeSearchService()">Inicializar com Dados</button>
+        <div id="init-output" class="output"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>2. Busca Básica</h3>
+        <div class="controls">
+            <div class="control-group">
+                <label>Prefixo:</label>
+                <input type="text" id="prefix-input" value="app" placeholder="Digite um prefixo...">
+            </div>
+            <div class="control-group">
+                <label>Máx. Resultados:</label>
+                <input type="number" id="max-results" value="5" min="1" max="20">
+            </div>
+            <div class="control-group">
+                <label>Ordenação:</label>
+                <select id="sort-order">
+                    <option value="asc">Ascendente</option>
+                    <option value="desc">Descendente</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Case Sensitive:</label>
+                <input type="checkbox" id="case-sensitive">
+            </div>
+        </div>
+        <button onclick="performSearch()">Buscar</button>
+        <div id="search-output" class="output search-result"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>3. Busca com Filtros</h3>
+        <div class="controls">
+            <div class="control-group">
+                <label>Prefixo:</label>
+                <input type="text" id="filter-prefix" value="a" placeholder="Digite um prefixo...">
+            </div>
+            <div class="control-group">
+                <label>Filtro (min. caracteres):</label>
+                <input type="number" id="min-length" value="4" min="1" max="20">
+            </div>
+        </div>
+        <button onclick="performFilteredSearch()">Buscar com Filtro</button>
+        <div id="filter-output" class="output search-result"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>4. Busca Fuzzy (Tolerante a Erros)</h3>
+        <div class="controls">
+            <div class="control-group">
+                <label>Consulta (com erros):</label>
+                <input type="text" id="fuzzy-query" value="aplle" placeholder="Digite com erros...">
+            </div>
+            <div class="control-group">
+                <label>Distância Máx.:</label>
+                <input type="number" id="max-distance" value="2" min="1" max="5">
+            </div>
+        </div>
+        <button onclick="performFuzzySearch()">Busca Fuzzy</button>
+        <div id="fuzzy-output" class="output fuzzy-result"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>5. Busca Múltipla</h3>
+        <div class="controls">
+            <div class="control-group">
+                <label>Prefixos (separados por vírgula):</label>
+                <input type="text" id="multiple-prefixes" value="app,book,cat" placeholder="app,book,cat">
+            </div>
+        </div>
+        <button onclick="performMultipleSearch()">Busca Múltipla</button>
+        <div id="multiple-output" class="output search-result"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>6. Estatísticas e Cache</h3>
+        <button onclick="showStats()">Mostrar Estatísticas</button>
+        <button onclick="clearCache()">Limpar Cache</button>
+        <button onclick="testCache()">Testar Cache</button>
+        <div id="stats-output" class="output stats-result"></div>
+    </div>
+
+    <script type="module">
+        import Trie from '../src/core/Trie.js';
+        import SearchService from '../src/services/SearchService.js';
+
+        // Instâncias globais
+        window.trie = new Trie();
+        window.searchService = new SearchService(window.trie, {
+            cacheEnabled: true,
+            maxCacheSize: 50,
+            defaultMaxResults: 10
+        });
+
+        // Dados de exemplo
+        const sampleData = [
+            'apple', 'app', 'application', 'apply', 'applicant', 'apparatus',
+            'book', 'books', 'booking', 'bookstore', 'bookmark', 'bookshelf',
+            'cat', 'cats', 'category', 'catalog', 'caterpillar', 'catholic',
+            'dog', 'dogs', 'doggy', 'doghouse', 'dogma', 'dogmatic',
+            'elephant', 'elephants', 'elevator', 'elegant', 'element', 'electric',
+            'fish', 'fishing', 'fisherman', 'fishery', 'fist', 'fistful',
+            'guitar', 'guitarist', 'guitar', 'gym', 'gymnastics', 'gypsy',
+            'house', 'houses', 'household', 'housewife', 'housework', 'housing',
+            'internet', 'international', 'interview', 'interest', 'interesting', 'interactive',
+            'javascript', 'java', 'jazz', 'jewelry', 'journal', 'journey'
+        ];
+
+        // Inicializar SearchService
+        window.initializeSearchService = function() {
+            const output = document.getElementById('init-output');
+            
+            // Limpar e reindexar
+            window.trie = new Trie();
+            window.searchService = new SearchService(window.trie, {
+                cacheEnabled: true,
+                maxCacheSize: 50,
+                defaultMaxResults: 10
+            });
+            
+            window.searchService.indexData(sampleData);
+            
+            output.className = 'output';
+            output.textContent = `✅ SearchService inicializado com ${sampleData.length} palavras:\n\n${sampleData.join(', ')}`;
+        };
+
+        // Busca básica
+        window.performSearch = function() {
+            const prefix = document.getElementById('prefix-input').value;
+            const maxResults = parseInt(document.getElementById('max-results').value);
+            const sortOrder = document.getElementById('sort-order').value;
+            const caseSensitive = document.getElementById('case-sensitive').checked;
+            
+            const output = document.getElementById('search-output');
+            
+            const startTime = performance.now();
+            const results = window.searchService.search(prefix, {
+                maxResults,
+                sortOrder,
+                caseSensitive
+            });
+            const endTime = performance.now();
+            
+            output.className = 'output search-result';
+            output.textContent = `🔍 Busca: "${prefix}"\n\nResultados (${results.length}):\n${results.join(', ')}\n\nTempo: ${(endTime - startTime).toFixed(2)}ms\nConfigurações: max=${maxResults}, sort=${sortOrder}, case=${caseSensitive}`;
+        };
+
+        // Busca com filtros
+        window.performFilteredSearch = function() {
+            const prefix = document.getElementById('filter-prefix').value;
+            const minLength = parseInt(document.getElementById('min-length').value);
+            
+            const output = document.getElementById('filter-output');
+            
+            const results = window.searchService.search(prefix, {
+                maxResults: 20,
+                filterFn: (word) => word.length >= minLength
+            });
+            
+            output.className = 'output search-result';
+            output.textContent = `🔍 Busca com Filtro: "${prefix}" (min. ${minLength} caracteres)\n\nResultados (${results.length}):\n${results.join(', ')}`;
+        };
+
+        // Busca fuzzy
+        window.performFuzzySearch = function() {
+            const query = document.getElementById('fuzzy-query').value;
+            const maxDistance = parseInt(document.getElementById('max-distance').value);
+            
+            const output = document.getElementById('fuzzy-output');
+            
+            const startTime = performance.now();
+            const results = window.searchService.searchFuzzy(query, {
+                maxDistance,
+                maxResults: 10
+            });
+            const endTime = performance.now();
+            
+            output.className = 'output fuzzy-result';
+            output.textContent = `🔍 Busca Fuzzy: "${query}" (distância ≤ ${maxDistance})\n\nResultados (${results.length}):\n${results.join(', ')}\n\nTempo: ${(endTime - startTime).toFixed(2)}ms`;
+        };
+
+        // Busca múltipla
+        window.performMultipleSearch = function() {
+            const prefixesInput = document.getElementById('multiple-prefixes').value;
+            const prefixes = prefixesInput.split(',').map(p => p.trim()).filter(p => p.length > 0);
+            
+            const output = document.getElementById('multiple-output');
+            
+            const results = window.searchService.searchMultiple(prefixes, {
+                maxResults: 15
+            });
+            
+            output.className = 'output search-result';
+            output.textContent = `🔍 Busca Múltipla: [${prefixes.join(', ')}]\n\nResultados únicos (${results.length}):\n${results.join(', ')}`;
+        };
+
+        // Estatísticas
+        window.showStats = function() {
+            const output = document.getElementById('stats-output');
+            const stats = window.searchService.getStats();
+            
+            output.className = 'output stats-result';
+            output.textContent = `📊 Estatísticas do SearchService:\n\n` +
+                `Total de buscas: ${stats.totalSearches}\n` +
+                `Cache hits: ${stats.cacheHits}\n` +
+                `Cache misses: ${stats.cacheMisses}\n` +
+                `Taxa de hit do cache: ${stats.cacheHitRate}\n` +
+                `Tamanho do cache: ${stats.cacheSize} itens`;
+        };
+
+        // Limpar cache
+        window.clearCache = function() {
+            window.searchService.clearCache();
+            const output = document.getElementById('stats-output');
+            output.className = 'output stats-result';
+            output.textContent = '✅ Cache limpo com sucesso!';
+        };
+
+        // Testar cache
+        window.testCache = function() {
+            const output = document.getElementById('stats-output');
+            
+            // Primeira busca (cache miss)
+            const start1 = performance.now();
+            window.searchService.search('app');
+            const end1 = performance.now();
+            
+            // Segunda busca (cache hit)
+            const start2 = performance.now();
+            window.searchService.search('app');
+            const end2 = performance.now();
+            
+            const stats = window.searchService.getStats();
+            
+            output.className = 'output stats-result';
+            output.textContent = `🧪 Teste de Cache:\n\n` +
+                `1ª busca (cache miss): ${(end1 - start1).toFixed(2)}ms\n` +
+                `2ª busca (cache hit): ${(end2 - start2).toFixed(2)}ms\n` +
+                `Melhoria: ${((end1 - start1) / (end2 - start2)).toFixed(1)}x mais rápido\n\n` +
+                `Cache hits: ${stats.cacheHits}\n` +
+                `Cache misses: ${stats.cacheMisses}`;
+        };
+
+        // Inicializar automaticamente
+        window.initializeSearchService();
+    </script>
+</body>
+</html>

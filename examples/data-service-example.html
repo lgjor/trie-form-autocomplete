@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo DataService - Trie Autocomplete</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 { color: #333; }
+        .example-section {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        .example-section h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .output {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .error {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+        .success {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Exemplo DataService</h1>
+    <p>Demonstração de como usar o DataService para carregar dados de diferentes fontes.</p>
+
+    <div class="example-section">
+        <h3>1. Carregar Array Estático</h3>
+        <button onclick="loadFromArray()">Carregar Array</button>
+        <div id="array-output" class="output"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>2. Carregar Arquivo JSON Local</h3>
+        <button onclick="loadFromFile('countries')">Países</button>
+        <button onclick="loadFromFile('cities')">Cidades</button>
+        <button onclick="loadFromFile('fruits')">Frutas</button>
+        <button onclick="loadFromFile('sample')">Dados Complexos</button>
+        <div id="file-output" class="output"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>3. Carregar de API Externa</h3>
+        <button onclick="loadFromAPI()">Carregar da API</button>
+        <div id="api-output" class="output"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>4. Operações com Dados</h3>
+        <button onclick="addData()">Adicionar Dados</button>
+        <button onclick="removeDuplicates()">Remover Duplicatas</button>
+        <button onclick="sortData()">Ordenar</button>
+        <button onclick="filterData()">Filtrar</button>
+        <button onclick="clearData()">Limpar</button>
+        <div id="operations-output" class="output"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>5. Metadados</h3>
+        <button onclick="showMetadata()">Mostrar Metadados</button>
+        <div id="metadata-output" class="output"></div>
+    </div>
+
+    <script type="module">
+        import DataService from '../src/services/DataService.js';
+
+        // Instância global do DataService para os exemplos
+        window.dataService = new DataService();
+
+        // Exemplo 1: Carregar array estático
+        window.loadFromArray = function() {
+            const output = document.getElementById('array-output');
+            try {
+                const fruits = ['Maçã', 'Banana', 'Laranja', 'Uva', 'Morango'];
+                
+                dataService.loadFromArray(fruits);
+                
+                output.className = 'output success';
+                output.textContent = `✅ Array carregado com sucesso!\n\nDados: ${JSON.stringify(dataService.getData(), null, 2)}\n\nContagem: ${dataService.getCount()}`;
+            } catch (error) {
+                output.className = 'output error';
+                output.textContent = `❌ Erro: ${error.message}`;
+            }
+        };
+
+        // Exemplo 2: Carregar arquivo JSON
+        window.loadFromFile = async function(type) {
+            const output = document.getElementById('file-output');
+            output.className = 'output';
+            output.textContent = '⏳ Carregando...';
+            
+            try {
+                let filePath;
+                switch(type) {
+                    case 'countries':
+                        filePath = '../data/countries.json';
+                        break;
+                    case 'cities':
+                        filePath = '../data/cities.json';
+                        break;
+                    case 'fruits':
+                        filePath = '../data/fruits.json';
+                        break;
+                    case 'sample':
+                        filePath = '../data/sample-data.json';
+                        break;
+                    default:
+                        throw new Error('Tipo de arquivo não reconhecido');
+                }
+
+                await dataService.loadFromFile(filePath);
+                
+                const data = dataService.getData();
+                const metadata = dataService.getMetadata();
+                
+                output.className = 'output success';
+                output.textContent = `✅ Arquivo carregado com sucesso!\n\nFonte: ${metadata.source}\nCarregado em: ${metadata.loadedAt}\nContagem: ${metadata.count}\n\nPrimeiros 10 itens:\n${data.slice(0, 10).join(', ')}${data.length > 10 ? '...' : ''}`;
+            } catch (error) {
+                output.className = 'output error';
+                output.textContent = `❌ Erro: ${error.message}`;
+            }
+        };
+
+        // Exemplo 3: Carregar de API
+        window.loadFromAPI = async function() {
+            const output = document.getElementById('api-output');
+            output.className = 'output';
+            output.textContent = '⏳ Carregando da API...';
+            
+            try {
+                // Exemplo com JSONPlaceholder (API pública de teste)
+                await dataService.loadFromAPI('https://jsonplaceholder.typicode.com/users');
+                
+                const data = dataService.getData();
+                const metadata = dataService.getMetadata();
+                
+                output.className = 'output success';
+                output.textContent = `✅ API carregada com sucesso!\n\nFonte: ${metadata.source}\nCarregado em: ${metadata.loadedAt}\nContagem: ${metadata.count}\n\nDados (nomes dos usuários):\n${data.slice(0, 5).join(', ')}${data.length > 5 ? '...' : ''}`;
+            } catch (error) {
+                output.className = 'output error';
+                output.textContent = `❌ Erro: ${error.message}\n\nNota: APIs externas podem ter CORS bloqueado. Use dados locais para teste.`;
+            }
+        };
+
+        // Exemplo 4: Operações com dados
+        window.addData = function() {
+            const output = document.getElementById('operations-output');
+            try {
+                dataService.addData(['Nova Fruta 1', 'Nova Fruta 2', 'Maçã']); // Maçã é duplicata
+                
+                output.className = 'output success';
+                output.textContent = `✅ Dados adicionados!\n\nTotal de itens: ${dataService.getCount()}\nÚltimos 5 itens: ${dataService.getData().slice(-5).join(', ')}`;
+            } catch (error) {
+                output.className = 'output error';
+                output.textContent = `❌ Erro: ${error.message}`;
+            }
+        };
+
+        window.removeDuplicates = function() {
+            const output = document.getElementById('operations-output');
+            try {
+                const beforeCount = dataService.getCount();
+                dataService.removeDuplicates();
+                const afterCount = dataService.getCount();
+                
+                output.className = 'output success';
+                output.textContent = `✅ Duplicatas removidas!\n\nAntes: ${beforeCount} itens\nDepois: ${afterCount} itens\nRemovidos: ${beforeCount - afterCount} duplicatas`;
+            } catch (error) {
+                output.className = 'output error';
+                output.textContent = `❌ Erro: ${error.message}`;
+            }
+        };
+
+        window.sortData = function() {
+            const output = document.getElementById('operations-output');
+            try {
+                dataService.sort(false); // case-insensitive
+                
+                output.className = 'output success';
+                output.textContent = `✅ Dados ordenados!\n\nPrimeiros 10 itens ordenados:\n${dataService.getData().slice(0, 10).join(', ')}`;
+            } catch (error) {
+                output.className = 'output error';
+                output.textContent = `❌ Erro: ${error.message}`;
+            }
+        };
+
+        window.filterData = function() {
+            const output = document.getElementById('operations-output');
+            try {
+                // Filtrar apenas itens que começam com 'M'
+                dataService.filter(item => item.toLowerCase().startsWith('m'));
+                
+                output.className = 'output success';
+                output.textContent = `✅ Dados filtrados (começam com 'M')!\n\nItens encontrados: ${dataService.getCount()}\nResultado: ${dataService.getData().join(', ')}`;
+            } catch (error) {
+                output.className = 'output error';
+                output.textContent = `❌ Erro: ${error.message}`;
+            }
+        };
+
+        window.clearData = function() {
+            const output = document.getElementById('operations-output');
+            try {
+                dataService.clear();
+                
+                output.className = 'output success';
+                output.textContent = `✅ Dados limpos!\n\nContagem: ${dataService.getCount()}`;
+            } catch (error) {
+                output.className = 'output error';
+                output.textContent = `❌ Erro: ${error.message}`;
+            }
+        };
+
+        // Exemplo 5: Metadados
+        window.showMetadata = function() {
+            const output = document.getElementById('metadata-output');
+            try {
+                const metadata = dataService.getMetadata();
+                
+                output.className = 'output success';
+                output.textContent = `📊 Metadados do DataService:\n\n${JSON.stringify(metadata, null, 2)}\n\nTem dados: ${dataService.hasData()}\nContagem: ${dataService.getCount()}`;
+            } catch (error) {
+                output.className = 'output error';
+                output.textContent = `❌ Erro: ${error.message}`;
+            }
+        };
+    </script>
+</body>
+</html>

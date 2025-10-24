@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trie Autocomplete - Demo</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #f8f9fa;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+        }
+
+        .demo-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .demo-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .info-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+
+        .info-box h3 {
+            color: #2e7d32;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .info-box ul {
+            color: #1b5e20;
+            margin-left: 20px;
+        }
+
+        .github-link {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .github-link a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .github-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌳 Trie Form Autocomplete</h1>
+    <p class="subtitle">Demonstração de autocomplete usando estrutura de dados Trie</p>
+
+    <div class="demo-section">
+        <h2>Exemplo Básico</h2>
+        <label for="country-input">Busque um país:</label>
+        <div class="autocomplete-container">
+            <input 
+                type="text" 
+                id="country-input" 
+                class="autocomplete-input"
+                placeholder="Digite para buscar..."
+                autocomplete="off"
+            >
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>Busca de Cidades</h2>
+        <label for="city-input">Busque uma cidade:</label>
+        <div class="autocomplete-container">
+            <input 
+                type="text" 
+                id="city-input" 
+                class="autocomplete-input"
+                placeholder="Digite para buscar..."
+                autocomplete="off"
+            >
+        </div>
+    </div>
+
+    <div class="info-box">
+        <h3>📚 Sobre o Projeto</h3>
+        <ul>
+            <li>Implementação de autocomplete usando estrutura de dados Trie</li>
+            <li>JavaScript puro (Vanilla JS) sem frameworks</li>
+            <li>Arquitetura baseada em princípios SOLID</li>
+            <li>Código modular e reutilizável</li>
+        </ul>
+    </div>
+
+    <div class="github-link">
+        <p>📖 Veja mais exemplos:</p>
+        <p>
+            <a href="examples/basic-example.html">Exemplo Básico</a> | 
+            <a href="examples/data-service-example.html">DataService Demo</a> |
+            <a href="examples/trie-example.html">Trie Demo</a> |
+            <a href="examples/search-service-example.html">SearchService Demo</a>
+        </p>
+    </div>
+
+    <!-- Importa o módulo principal -->
+    <script type="module">
+        import TrieAutocomplete from './src/main.js';
+
+        // TODO: Configurar e inicializar os autocompletes quando a implementação estiver pronta
+        
+        /*
+        // Exemplo de uso futuro:
+        
+        const countryAutocomplete = TrieAutocomplete.create('#country-input', {
+            data: ['Brasil', 'Argentina', 'Chile', 'Uruguai', 'Paraguai'],
+            minChars: 1,
+            maxResults: 5
+        });
+
+        const cityAutocomplete = TrieAutocomplete.create('#city-input', {
+            dataSource: '/api/cities',
+            minChars: 2,
+            maxResults: 10
+        });
+        */
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo Trie - contains vs search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 { color: #333; }
+        .example-section {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        .example-section h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .output {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .contains-result {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1565c0;
+        }
+        .search-result {
+            background: #f3e5f5;
+            border-color: #9c27b0;
+            color: #6a1b9a;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+        .trie-visualization {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌳 Exemplo Trie - contains() vs search()</h1>
+    <p>Demonstração da diferença entre verificação exata e busca por prefixo.</p>
+
+    <div class="example-section">
+        <h3>1. Inicializar Trie com Dados</h3>
+        <button onclick="initializeTrie()">Inicializar Trie</button>
+        <div id="init-output" class="output"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>2. Comparação: contains() vs search()</h3>
+        <div class="input-group">
+            <input type="text" id="test-input" placeholder="Digite uma palavra ou prefixo..." value="app">
+            <button onclick="testBoth()">Testar Ambos</button>
+        </div>
+        
+        <div class="comparison">
+            <div>
+                <h4>🔍 contains() - Verificação Exata</h4>
+                <div id="contains-output" class="output contains-result"></div>
+            </div>
+            <div>
+                <h4>🔎 search() - Busca por Prefixo</h4>
+                <div id="search-output" class="output search-result"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="example-section">
+        <h3>3. Testes Específicos</h3>
+        <button onclick="testContains()">Testar contains()</button>
+        <button onclick="testSearch()">Testar search()</button>
+        <button onclick="showAllWords()">Mostrar Todas as Palavras</button>
+        <div id="specific-output" class="output"></div>
+    </div>
+
+    <div class="example-section">
+        <h3>4. Visualização da Trie</h3>
+        <button onclick="visualizeTrie()">Visualizar Estrutura</button>
+        <div id="trie-output" class="trie-visualization"></div>
+    </div>
+
+    <script type="module">
+        import Trie from '../src/core/Trie.js';
+
+        // Instância global da Trie
+        window.trie = new Trie();
+
+        // Dados de exemplo
+        const sampleWords = [
+            'apple', 'app', 'application', 'apply', 'applicant',
+            'book', 'books', 'booking', 'bookstore',
+            'cat', 'cats', 'category', 'catalog',
+            'dog', 'dogs', 'doggy', 'doghouse',
+            'elephant', 'elephants', 'elevator'
+        ];
+
+        // Inicializar Trie
+        window.initializeTrie = function() {
+            const output = document.getElementById('init-output');
+            
+            // Limpar Trie
+            window.trie = new Trie();
+            
+            // Inserir palavras
+            sampleWords.forEach(word => {
+                window.trie.insert(word);
+            });
+            
+            output.className = 'output';
+            output.textContent = `✅ Trie inicializada com ${sampleWords.length} palavras:\n\n${sampleWords.join(', ')}`;
+        };
+
+        // Testar ambos os métodos
+        window.testBoth = function() {
+            const input = document.getElementById('test-input').value;
+            const containsOutput = document.getElementById('contains-output');
+            const searchOutput = document.getElementById('search-output');
+            
+            // Teste contains()
+            const containsResult = window.trie.contains(input);
+            containsOutput.className = 'output contains-result';
+            containsOutput.textContent = `contains("${input}") = ${containsResult}\n\n${containsResult ? '✅ A palavra EXATA existe na Trie' : '❌ A palavra EXATA não existe na Trie'}`;
+            
+            // Teste search()
+            const searchResult = window.trie.search(input);
+            searchOutput.className = 'output search-result';
+            searchOutput.textContent = `search("${input}") = [${searchResult.join(', ')}]\n\nEncontradas ${searchResult.length} palavras que começam com "${input}":\n${searchResult.length > 0 ? searchResult.join('\n') : 'Nenhuma palavra encontrada'}`;
+        };
+
+        // Testes específicos
+        window.testContains = function() {
+            const output = document.getElementById('specific-output');
+            const testCases = ['app', 'apple', 'appl', 'book', 'books', 'cat', 'doggy', 'elephant', 'xyz'];
+            
+            let result = '🔍 Testando contains() - Verificação Exata:\n\n';
+            
+            testCases.forEach(word => {
+                const exists = window.trie.contains(word);
+                result += `contains("${word}") = ${exists} ${exists ? '✅' : '❌'}\n`;
+            });
+            
+            output.className = 'output';
+            output.textContent = result;
+        };
+
+        window.testSearch = function() {
+            const output = document.getElementById('specific-output');
+            const testCases = ['app', 'book', 'cat', 'dog', 'ele', 'xyz'];
+            
+            let result = '🔎 Testando search() - Busca por Prefixo:\n\n';
+            
+            testCases.forEach(prefix => {
+                const words = window.trie.search(prefix);
+                result += `search("${prefix}") = [${words.join(', ')}] (${words.length} palavras)\n`;
+            });
+            
+            output.className = 'output';
+            output.textContent = result;
+        };
+
+        window.showAllWords = function() {
+            const output = document.getElementById('specific-output');
+            
+            // Usar search com string vazia para obter todas as palavras
+            const allWords = window.trie.search('');
+            
+            output.className = 'output';
+            output.textContent = `📚 Todas as palavras na Trie (${allWords.length} total):\n\n${allWords.join(', ')}`;
+        };
+
+        // Visualização simples da Trie
+        window.visualizeTrie = function() {
+            const output = document.getElementById('trie-output');
+            
+            let visualization = '🌳 Estrutura da Trie:\n\n';
+            visualization += 'root\n';
+            
+            // Função recursiva para visualizar
+            function visualizeNode(node, prefix = '', depth = 0) {
+                const indent = '  '.repeat(depth);
+                
+                for (let char in node.children) {
+                    const child = node.children[char];
+                    const isEnd = child.isEndOfWord ? ' (END)' : '';
+                    visualization += `${indent}├─ ${char}${isEnd}\n`;
+                    
+                    if (Object.keys(child.children).length > 0) {
+                        visualizeNode(child, prefix + char, depth + 1);
+                    }
+                }
+            }
+            
+            visualizeNode(window.trie.root);
+            
+            output.textContent = visualization;
+        };
+
+        // Inicializar automaticamente
+        window.initializeTrie();
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo Básico - Trie Autocomplete</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 { color: #333; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exemplo Básico de Uso</h1>
+    
+    <div class="form-group">
+        <label for="fruit-input">Frutas:</label>
+        <div class="autocomplete-container">
+            <input 
+                type="text" 
+                id="fruit-input" 
+                class="autocomplete-input"
+                placeholder="Digite uma fruta..."
+            >
+        </div>
+    </div>
+
+    <script type="module">
+        import TrieAutocomplete from '../src/main.js';
+
+        // TODO: Implementar exemplo quando o código estiver pronto
+        
+        /*
+        // Array de frutas para exemplo
+        const fruits = [
+            'Maçã', 'Manga', 'Melancia', 'Melão', 'Morango',
+            'Banana', 'Abacaxi', 'Abacate', 'Acerola',
+            'Laranja', 'Limão', 'Lima', 'Lichia',
+            'Uva', 'Pêra', 'Pêssego', 'Pitanga'
+        ];
+
+        // Inicializa o autocomplete
+        const autocomplete = TrieAutocomplete.create('#fruit-input', {
+            data: fruits,
+            minChars: 1,
+            maxResults: 8,
+            caseSensitive: false
+        });
+        */
+    </script>
+</body>
+</html>
+

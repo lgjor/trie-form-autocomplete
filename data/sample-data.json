@@ -1,0 +1,22 @@
+{
+  "description": "Dados de exemplo para demonstração do autocomplete",
+  "version": "1.0.0",
+  "categories": {
+    "countries": {
+      "name": "Países",
+      "data": ["Brasil", "Argentina", "Chile", "Uruguai", "Paraguai", "Bolívia", "Peru", "Equador", "Colômbia", "Venezuela"]
+    },
+    "cities": {
+      "name": "Cidades Brasileiras",
+      "data": ["São Paulo", "Rio de Janeiro", "Brasília", "Salvador", "Fortaleza", "Belo Horizonte", "Manaus", "Curitiba", "Recife", "Goiânia"]
+    },
+    "fruits": {
+      "name": "Frutas",
+      "data": ["Maçã", "Banana", "Laranja", "Uva", "Morango", "Abacaxi", "Manga", "Pêra", "Pêssego", "Kiwi"]
+    },
+    "programming": {
+      "name": "Linguagens de Programação",
+      "data": ["JavaScript", "Python", "Java", "C#", "C++", "PHP", "Ruby", "Go", "Rust", "TypeScript", "Swift", "Kotlin"]
+    }
+  }
+}

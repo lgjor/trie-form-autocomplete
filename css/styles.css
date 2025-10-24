@@ -1,0 +1,150 @@
+/**
+ * Estilos para Trie Autocomplete
+ * 
+ * Estilos base e tema padrão para o componente de autocomplete
+ */
+
+/* Reset e estilos base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container do autocomplete */
+.autocomplete-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Input */
+.autocomplete-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.autocomplete-input:focus {
+    border-color: #4CAF50;
+}
+
+/* Lista de sugestões */
+.autocomplete-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    list-style: none;
+}
+
+/* Item da lista */
+.autocomplete-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover {
+    background-color: #f5f5f5;
+}
+
+/* Item selecionado */
+.autocomplete-item--selected {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Highlight do texto correspondente */
+.autocomplete-highlight {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.autocomplete-item--selected .autocomplete-highlight {
+    color: #fff;
+}
+
+/* Estado escondido */
+.autocomplete-hidden {
+    display: none;
+}
+
+/* Estado de loading */
+.autocomplete-loading {
+    padding: 12px 16px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+/* Mensagens de feedback */
+.autocomplete-message {
+    padding: 12px 16px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Scrollbar customizada */
+.autocomplete-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.autocomplete-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.autocomplete-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.autocomplete-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.autocomplete-list {
+    animation: fadeIn 0.2s ease;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .autocomplete-input {
+        font-size: 16px; /* Evita zoom no iOS */
+    }
+
+    .autocomplete-list {
+        max-height: 200px;
+    }
+}
+
