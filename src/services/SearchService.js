@@ -24,6 +24,7 @@ class SearchService {
             ...config
         };
         this.searchCache = new Map();
+        this.originalDataMap = new Map(); // Mapeamento: versão normalizada -> versão original
         this.stats = {
             totalSearches: 0,
             cacheHits: 0,
@@ -72,8 +73,13 @@ class SearchService {
         this.stats.cacheMisses++;
         this.stats.totalSearches++;
 
-        // Realizar busca na Trie
-        let results = this.trie.search(normalizedPrefix);
+        // Realizar busca na Trie (usando versão normalizada)
+        let normalizedResults = this.trie.search(normalizedPrefix);
+
+        // Converter resultados normalizados para versões originais
+        let results = normalizedResults.map(normalized => {
+            return this.originalDataMap.get(normalized) || normalized;
+        });
 
         // Aplicar filtro customizado se fornecido
         if (searchOptions.filterFn && typeof searchOptions.filterFn === 'function') {
@@ -114,13 +120,24 @@ class SearchService {
             throw new Error('SearchService: indexData espera um array');
         }
 
-        // Limpar Trie atual
+        // Limpar Trie atual e mapeamento
         this._clearTrie();
+        this.originalDataMap.clear();
         
-        // Inserir novos dados
+        // Inserir novos dados (normalizando para busca case-insensitive)
         data.forEach(item => {
             if (typeof item === 'string' && item.trim().length > 0) {
-                this.trie.insert(item.trim());
+                const original = item.trim();
+                const normalized = original.toLowerCase();
+                
+                // Armazenar na Trie usando versão normalizada
+                this.trie.insert(normalized);
+                
+                // Mapear versão normalizada -> versão original
+                // Se já existe, mantém a primeira ocorrência
+                if (!this.originalDataMap.has(normalized)) {
+                    this.originalDataMap.set(normalized, original);
+                }
             }
         });
 
@@ -258,21 +275,22 @@ class SearchService {
         // Como não temos método clear na Trie, recriamos a instância
         // Em uma implementação real, seria melhor adicionar um método clear na Trie
         this.trie = new (this.trie.constructor)();
+        // Nota: originalDataMap é limpo pelo indexData() que chama este método
     }
 
     /**
      * Obtém todas as palavras da Trie
-     * @returns {string[]} Todas as palavras
+     * @returns {string[]} Todas as palavras (versões originais)
      */
     _getAllWords() {
         // Implementação alternativa que não depende de métodos privados
-        const allWords = [];
+        const allNormalizedWords = [];
         
-        // Função recursiva para coletar palavras
+        // Função recursiva para coletar palavras normalizadas
         const collectFromNode = (node, currentWord = '') => {
             // Se este nó marca o fim de uma palavra, adiciona ao resultado
             if (node.isEndOfWord) {
-                allWords.push(currentWord);
+                allNormalizedWords.push(currentWord);
             }
             
             // Recursivamente coleta palavras de todos os filhos
@@ -284,7 +302,10 @@ class SearchService {
         // Começa da raiz
         collectFromNode(this.trie.root);
         
-        return allWords;
+        // Converter para versões originais
+        return allNormalizedWords.map(normalized => {
+            return this.originalDataMap.get(normalized) || normalized;
+        });
     }
 
     /**

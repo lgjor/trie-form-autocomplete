@@ -24,11 +24,43 @@ import { DEFAULT_CONFIG } from './config/constants.js';
  * @returns {AutocompleteInput}
  */
 function createAutocomplete(inputSelector, options = {}) {
-    // TODO: Implementar factory
     // 1. Obter elemento input
-    // 2. Criar instâncias dos serviços
-    // 3. Injetar dependências
-    // 4. Retornar instância configurada
+    const inputElement = typeof inputSelector === 'string'
+        ? document.querySelector(inputSelector)
+        : inputSelector;
+    
+    // 2. Validar elemento
+    if (!inputElement) {
+        throw new Error('Elemento input não encontrado');
+    }
+    
+    if (!(inputElement instanceof HTMLInputElement)) {
+        throw new Error('Elemento fornecido não é um input');
+    }
+    
+    // 3. Criar instâncias dos serviços
+    const trie = new Trie();
+    const dataService = new DataService();
+    const searchService = new SearchService(trie);
+    
+    // 4. Carregar dados (se fornecidos)
+    if (options.data) {
+        dataService.loadFromArray(options.data);
+        searchService.indexData(dataService.getData());
+    }
+    
+    // 5. Criar instância de AutocompleteInput
+    const autocomplete = new AutocompleteInput(
+        inputElement,
+        searchService,
+        options
+    );
+    
+    // 6. Inicializar componente
+    autocomplete.initialize();
+    
+    // 7. Retornar instância configurada
+    return autocomplete;
 }
 
 /**
@@ -38,7 +70,25 @@ function createAutocomplete(inputSelector, options = {}) {
  * @returns {AutocompleteInput[]}
  */
 function initializeAll(selector, options = {}) {
-    // TODO: Implementar inicialização múltipla
+    // 1. Buscar todos os elementos que correspondem ao seletor
+    const elements = document.querySelectorAll(selector);
+    
+    // 2. Converter NodeList para Array
+    const elementsArray = Array.from(elements);
+    
+    // 3. Validar se encontrou elementos
+    if (elementsArray.length === 0) {
+        console.warn(`Nenhum elemento encontrado com o seletor: ${selector}`);
+        return [];
+    }
+    
+    // 4. Criar autocomplete para cada elemento
+    const autocompletes = elementsArray.map(element => {
+        return createAutocomplete(element, options);
+    });
+    
+    // 5. Retornar array de instâncias
+    return autocompletes;
 }
 
 /**

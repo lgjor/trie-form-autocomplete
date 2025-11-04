@@ -1,8 +1,8 @@
-# 🌳 Trie Form Autocomplete
+# Trie Form Autocomplete
 
 Sistema de autocomplete para formulários HTML utilizando a estrutura de dados **Trie (Árvore de Prefixos)**, implementado em JavaScript puro seguindo princípios SOLID e boas práticas de arquitetura de software.
 
-## 📋 Sobre o Projeto
+## Sobre o Projeto
 
 Este projeto é uma implementação educacional focada em:
 - Prática de estruturas de dados (Trie)
@@ -10,7 +10,7 @@ Este projeto é uma implementação educacional focada em:
 - Arquitetura modular e escalável
 - JavaScript vanilla (sem frameworks)
 
-## 🏗️ Arquitetura do Projeto
+## Arquitetura do Projeto
 
 ### Estrutura de Diretórios
 
@@ -43,7 +43,7 @@ trie-form-autocomplete/
 └── IMPLEMENTATION_GUIDE.md  # Guia de implementação
 ```
 
-## 🎯 Princípios SOLID Aplicados
+## Princípios SOLID Aplicados
 
 ### 1. **Single Responsibility Principle (SRP)**
 Cada classe/módulo tem uma única responsabilidade:
@@ -73,7 +73,7 @@ Cada classe/módulo tem uma única responsabilidade:
 - Injeção de dependências via construtor
 - Acoplamento fraco entre módulos
 
-## 🔧 Componentes Principais
+## Componentes Principais
 
 ### Core Layer
 
@@ -181,7 +181,7 @@ const autocomplete = TrieAutocomplete.create('#meu-input', {
 }
 ```
 
-## 📊 Complexidade dos Algoritmos
+## Complexidade dos Algoritmos
 
 ### Operações da Trie
 - **Inserção**: O(m) - m = comprimento da palavra
@@ -195,7 +195,7 @@ const autocomplete = TrieAutocomplete.create('#meu-input', {
 - Renderização em lote para grandes conjuntos
 - Event delegation para performance
 
-## 🎨 Customização de Estilos
+## Customização de Estilos
 
 Os estilos podem ser customizados através das classes CSS definidas em `constants.js`:
 
@@ -215,19 +215,7 @@ Os estilos podem ser customizados através das classes CSS definidas em `constan
 npm test
 ```
 
-## 📝 Próximos Passos
-
-- [x] Implementar a estrutura de dados Trie
-- [x] Implementar os serviços de dados e busca
-- [ ] Implementar os componentes UI
-- [ ] Adicionar testes unitários
-- [ ] Adicionar mais exemplos de uso
-- [ ] Implementar suporte a dados assíncronos
-- [ ] Adicionar métricas de performance
-- [ ] Criar documentação de API detalhada
-- [ ] Publicar no GitHub Pages
-
-## 🌐 Deploy
+## Deploy
 
 Para publicar no GitHub Pages, consulte o guia completo em [`DEPLOY.md`](DEPLOY.md).
 
@@ -247,9 +235,6 @@ MIT License - sinta-se livre para usar em seus projetos.
 
 ## 👨‍💻 Autor
 
+Lucas de Godoy Chicarelli
+
 Projeto desenvolvido para prática de estruturas de dados e princípios SOLID.
-
----
-
-**Nota**: Este projeto está em fase de estruturação arquitetural. As implementações dos algoritmos serão desenvolvidas posteriormente.
-

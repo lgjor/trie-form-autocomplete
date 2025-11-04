@@ -116,6 +116,20 @@
         </div>
     </div>
 
+    <div class="demo-section">
+        <h2>Busca de Frutas</h2>
+        <label for="fruit-input">Busque uma fruta:</label>
+        <div class="autocomplete-container">
+            <input 
+                type="text" 
+                id="fruit-input" 
+                class="autocomplete-input"
+                placeholder="Digite para buscar..."
+                autocomplete="off"
+            >
+        </div>
+    </div>
+
     <div class="info-box">
         <h3>📚 Sobre o Projeto</h3>
         <ul>
@@ -139,24 +153,86 @@
     <!-- Importa o módulo principal -->
     <script type="module">
         import TrieAutocomplete from './src/main.js';
+        import DataService from './src/services/DataService.js';
 
-        // TODO: Configurar e inicializar os autocompletes quando a implementação estiver pronta
-        
-        /*
-        // Exemplo de uso futuro:
-        
-        const countryAutocomplete = TrieAutocomplete.create('#country-input', {
-            data: ['Brasil', 'Argentina', 'Chile', 'Uruguai', 'Paraguai'],
-            minChars: 1,
-            maxResults: 5
-        });
+        // Função para carregar dados de um arquivo JSON
+        async function loadDataFromFile(filePath) {
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`Erro ao carregar ${filePath}: ${response.statusText}`);
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                return [];
+            }
+        }
 
-        const cityAutocomplete = TrieAutocomplete.create('#city-input', {
-            dataSource: '/api/cities',
-            minChars: 2,
-            maxResults: 10
-        });
-        */
+        // Inicializar autocompletes quando a página carregar
+        async function initializeAutocompletes() {
+            // Carregar dados de países
+            const countriesData = await loadDataFromFile('./data/countries.json');
+            
+            // Criar autocomplete para países
+            const countryAutocomplete = TrieAutocomplete.create('#country-input', {
+                data: countriesData,
+                minChars: 1,
+                maxResults: 10,
+                debounceDelay: 300,
+                highlightMatch: true,
+                caseSensitive: false,
+                autoFocus: true,
+                closeOnBlur: true,
+                closeOnSelect: true
+            });
+
+            console.log('✅ Autocomplete de países inicializado com', countriesData.length, 'países');
+
+            // Carregar dados de cidades
+            const citiesData = await loadDataFromFile('./data/cities.json');
+            
+            // Criar autocomplete para cidades
+            const cityAutocomplete = TrieAutocomplete.create('#city-input', {
+                data: citiesData,
+                minChars: 2,
+                maxResults: 10,
+                debounceDelay: 300,
+                highlightMatch: true,
+                caseSensitive: false,
+                autoFocus: true,
+                closeOnBlur: true,
+                closeOnSelect: true
+            });
+
+            console.log('✅ Autocomplete de cidades inicializado com', citiesData.length, 'cidades');
+
+            // Carregar dados de frutas
+            const fruitsData = await loadDataFromFile('./data/fruits.json');
+            
+            // Criar autocomplete para frutas
+            const fruitAutocomplete = TrieAutocomplete.create('#fruit-input', {
+                data: fruitsData,
+                minChars: 1,
+                maxResults: 10,
+                debounceDelay: 300,
+                highlightMatch: true,
+                caseSensitive: false,
+                autoFocus: true,
+                closeOnBlur: true,
+                closeOnSelect: true
+            });
+
+            console.log('✅ Autocomplete de frutas inicializado com', fruitsData.length, 'frutas');
+        }
+
+        // Inicializar quando o DOM estiver pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeAutocompletes);
+        } else {
+            initializeAutocompletes();
+        }
     </script>
 </body>
 </html>

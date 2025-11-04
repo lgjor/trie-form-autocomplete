@@ -36,3 +36,6 @@ temp/
 # OS files
 Thumbs.db
 
+# Recursos privados do desenvolvedor
+private_resources/
+private_resouces/

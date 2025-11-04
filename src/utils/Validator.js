@@ -13,7 +13,8 @@
  * @returns {boolean}
  */
 export function isValidString(input) {
-    // TODO: Implementar validação
+    // Verifica se é string válida não vazia (após remover espaços)
+    return typeof input === 'string' && input.trim().length > 0;
 }
 
 /**
@@ -22,7 +23,8 @@ export function isValidString(input) {
  * @returns {boolean}
  */
 export function isValidArray(input) {
-    // TODO: Implementar validação
+    // Verifica se é array válido não vazio
+    return Array.isArray(input) && input.length > 0;
 }
 
 /**
@@ -31,7 +33,13 @@ export function isValidArray(input) {
  * @returns {string}
  */
 export function sanitizeString(str) {
-    // TODO: Implementar sanitização
+    // Validar se é string
+    if (typeof str !== 'string') {
+        throw new Error('Str must be a string');
+    }
+    
+    // Remover apenas símbolos/characteres especiais, mantendo letras acentuadas
+    return str.replace(/[!@#$%^&*()\[\]{}|;:'"<>,./?\\]/g, '');
 }
 
 /**
@@ -41,6 +49,13 @@ export function sanitizeString(str) {
  */
 export function normalizeString(str) {
     // TODO: Implementar normalização
+    if (typeof str !== 'string') {
+        throw new Error('Str must be a string');
+    }
+    return str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
 }
 
 /**
@@ -48,8 +63,50 @@ export function normalizeString(str) {
  * @param {Object} config
  * @returns {boolean}
  */
+ // Opcional: Validar limites máximos em maxResults <= 1000, debounceDelay <= 10000
 export function validateConfig(config) {
-    // TODO: Implementar validação de config
+    // Validar se é objeto
+    if (typeof config !== 'object' || config === null || Array.isArray(config)) {
+        return false;
+    }
+    
+    // Validar minChars (se presente)
+    if ('minChars' in config) {
+        if (typeof config.minChars !== 'number' || 
+            !Number.isInteger(config.minChars) || 
+            config.minChars < 1) {
+            return false;
+        }
+    }
+    
+    // Validar maxResults (se presente)
+    if ('maxResults' in config) {
+        if (typeof config.maxResults !== 'number' || 
+            !Number.isInteger(config.maxResults) || 
+            config.maxResults < 1) {
+            return false;
+        }
+    }
+    
+    // Validar debounceDelay (se presente)
+    if ('debounceDelay' in config) {
+        if (typeof config.debounceDelay !== 'number' || 
+            config.debounceDelay < 0) {
+            return false;
+        }
+    }
+    
+    // Validar propriedades booleanas (se presentes)
+    const booleanProps = ['highlightMatch', 'caseSensitive', 'autoFocus', 
+                          'closeOnBlur', 'closeOnSelect'];
+    
+    for (const prop of booleanProps) {
+        if (prop in config && typeof config[prop] !== 'boolean') {
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 /**
