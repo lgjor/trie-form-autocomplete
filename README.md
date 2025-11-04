@@ -1,10 +1,10 @@
 # Trie Form Autocomplete
 
+Sistema de autocomplete para formulários HTML utilizando a estrutura de dados **Trie (Árvore de Prefixos)**, implementado em JavaScript puro seguindo princípios SOLID e boas práticas de arquitetura de software.
+
 <div align="center">
   <img src="github/preview.png" alt="Trie Form Autocomplete Preview" width="800"/>
 </div>
-
-Sistema de autocomplete para formulários HTML utilizando a estrutura de dados **Trie (Árvore de Prefixos)**, implementado em JavaScript puro seguindo princípios SOLID e boas práticas de arquitetura de software.
 
 ## Sobre o Projeto
 
