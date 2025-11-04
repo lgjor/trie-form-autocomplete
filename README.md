@@ -223,7 +223,7 @@ Para publicar no GitHub Pages, consulte o guia completo em [`DEPLOY.md`](DEPLOY.
 1. Push para o GitHub
 2. Settings > Pages > Source: main branch, / (root)
 3. Aguardar deploy
-4. Acessar: `https://seu-usuario.github.io/trie-form-autocomplete/`
+4. Acessar: `https://github.com/lgjor/trie-form-autocomplete`
 
 ## 🤝 Contribuindo
 
