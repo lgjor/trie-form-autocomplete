@@ -62,7 +62,8 @@ export function calculateDropdownPosition(inputElement) {
     const rect = inputElement.getBoundingClientRect();
     const top = rect.bottom + window.scrollY;
     const left = rect.left + window.scrollX;
-    const width = rect.width;
+    // Usar offsetWidth como fallback se rect.width for 0 (comum em ambientes de teste)
+    const width = rect.width > 0 ? rect.width : inputElement.offsetWidth;
 
     // Retornar objeto com posição e largura
     return { top, left, width };

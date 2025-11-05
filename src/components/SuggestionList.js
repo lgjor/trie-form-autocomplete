@@ -142,8 +142,10 @@ class SuggestionList {
         // Adicionar seleção ao novo item (se índice válido)
         if (index >= 0 && this.items[index]) {
             this.items[index].classList.add(CSS_CLASSES.itemSelected);
-            // Opcional: scroll para o item
-            this.items[index].scrollIntoView({ block: 'nearest' });
+            // Opcional: scroll para o item (se o método existir)
+            if (typeof this.items[index].scrollIntoView === 'function') {
+                this.items[index].scrollIntoView({ block: 'nearest' });
+            }
         }
         
         // Atualizar índice selecionado

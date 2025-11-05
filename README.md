@@ -6,13 +6,15 @@ Sistema de autocomplete para formulários HTML utilizando a estrutura de dados *
   <img src="github/preview.png" alt="Trie Form Autocomplete Preview" width="800"/>
 </div>
 
-## Sobre o Projeto
+## Sobre as Tecnologias Utilizadas
 
 Este projeto é uma implementação educacional focada em:
 - Prática de estruturas de dados (Trie)
 - Aplicação de princípios SOLID
 - Arquitetura modular e escalável
 - JavaScript vanilla (sem frameworks)
+- NPM para instalar dependências
+- Vitest para a realização de testes unitários
 
 ## Arquitetura do Projeto
 
@@ -212,22 +214,63 @@ Os estilos podem ser customizados através das classes CSS definidas em `constan
 .autocomplete-highlight
 ```
 
-## 🧪 Testes
+## Testes
+
+O projeto utiliza **Vitest** para testes unitários. Todos os componentes principais possuem cobertura de testes.
+
+### Instalação
 
 ```bash
-# Rodar testes (quando implementados)
-npm test
+# Instalar dependências (incluindo dependências de teste)
+npm install
 ```
 
-## Deploy
+### Executar Testes
 
-Para publicar no GitHub Pages, consulte o guia completo em [`DEPLOY.md`](DEPLOY.md).
+```bash
+# Executar testes em modo watch (observa mudanças)
+npm test
 
-**Resumo rápido**:
-1. Push para o GitHub
-2. Settings > Pages > Source: main branch, / (root)
-3. Aguardar deploy
-4. Acessar: `https://github.com/lgjor/trie-form-autocomplete`
+# Executar testes uma vez (sem watch)
+npm run test:run
+
+# Executar testes com interface gráfica
+npm run test:ui
+
+# Executar testes com relatório de cobertura
+npm run test:coverage
+```
+
+### Estrutura de Testes
+
+Os testes estão organizados seguindo a mesma estrutura do código fonte:
+
+```
+tests/
+├── core/
+│   └── Trie.test.js          # Testes da estrutura Trie
+├── utils/
+│   ├── Validator.test.js     # Testes de validação
+│   └── DOMUtils.test.js      # Testes de manipulação DOM
+├── services/
+│   ├── DataService.test.js   # Testes do serviço de dados
+│   └── SearchService.test.js # Testes do serviço de busca
+└── components/
+    ├── SuggestionList.test.js    # Testes da lista de sugestões
+    └── AutocompleteInput.test.js # Testes do componente principal
+```
+
+### Cobertura de Testes
+
+Os testes cobrem:
+- ✅ **Core**: Trie (insert, search, contains, remove)
+- ✅ **Utils**: Validator, DOMUtils
+- ✅ **Services**: DataService, SearchService
+- ✅ **Components**: SuggestionList, AutocompleteInput
+
+### Documentação Completa
+
+Para mais detalhes sobre os testes, consulte [`tests/README.md`](tests/README.md).
 
 ## 🤝 Contribuindo
 

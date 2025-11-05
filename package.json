@@ -6,7 +6,10 @@
   "main": "src/main.js",
   "scripts": {
     "dev": "npx http-server . -p 8080 -o",
-    "test": "echo \"Testes serão implementados futuramente\" && exit 0"
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:run": "vitest run"
   },
   "keywords": [
     "autocomplete",
@@ -19,7 +22,12 @@
   ],
   "author": "",
   "license": "MIT",
-  "devDependencies": {},
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "jsdom": "^23.0.0"
+  },
   "dependencies": {}
 }
 
