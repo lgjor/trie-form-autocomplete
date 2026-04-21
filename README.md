@@ -14,7 +14,7 @@ Obrigado.
   <a href="https://lucasgch.github.io/trie-form-autocomplete/"><img src="github/preview.png" alt="Trie Form Autocomplete Preview" width="800"/></a>
 </div>
 
-<div align="center">Preview: <a href="https://lucasgch.github.io/trie-form-autocomplete/">https://lgjor.github.io/trie-form-autocomplete/</a></div>
+<div align="center">Preview: <a href="https://lucasgch.github.io/trie-form-autocomplete/">https://lucasgch.github.io/trie-form-autocomplete/</a></div>
 
 ## Sobre as Tecnologias Utilizadas
 
